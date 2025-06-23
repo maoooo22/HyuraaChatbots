@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   const { prompt } = req.body;
-  const API_KEY = '91c83dc4-f31c-4998-88a9-56526d6c3ce4'; // ganti dengan key lo sendiri
+  const API_KEY = 'f48b6124-e5ac-4913-9779-735ed1f7ae34'; // ganti dengan key lo sendiri
   const endpoint = 'https://api.deepseek.com/chat/completions';
 
   try {
