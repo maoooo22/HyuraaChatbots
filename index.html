@@ -3,28 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <title>Marimo AI</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    #chatbox { width: 100%; height: 200px; }
-    #output { margin-top: 1rem; white-space: pre-wrap; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Marimo AI Chat</h1>
-  <textarea id="chatbox" placeholder="Tulis pesan di sini..."></textarea><br>
-  <button onclick="sendMessage()">Kirim</button>
-  <div id="output"></div>
+  <div class="container">
+    <h1>Marimo AI</h1>
+    <div class="chat-container" id="chat"></div>
+    <form id="chat-form">
+      <textarea id="chatbox" placeholder="Tulis sesuatu..." required></textarea>
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
 
   <script>
-    async function sendMessage() {
-      const prompt = document.getElementById('chatbox').value;
+    const chatForm = document.getElementById('chat-form');
+    const chatBox = document.getElementById('chatbox');
+    const chatDisplay = document.getElementById('chat');
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const prompt = chatBox.value.trim();
+      if (!prompt) return;
+
+      appendMessage('You', prompt, 'user');
+      chatBox.value = '';
+      
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ prompt }),
       });
+
       const data = await res.json();
-      document.getElementById('output').innerText = data.reply || 'Gagal!';
+      appendMessage('Marimo AI', data.reply || 'Gagal mendapatkan respons.', 'bot');
+    });
+
+    function appendMessage(sender, text, type) {
+      const msg = document.createElement('div');
+      msg.className = `message ${type}`;
+      msg.innerHTML = `<strong>${sender}:</strong> <p>${text}</p>`;
+      chatDisplay.appendChild(msg);
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
     }
   </script>
 </body>
